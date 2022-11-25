@@ -202,7 +202,7 @@ DF <- DF %>%
   unnest() %>%
   mutate(Value = 1) %>%
   spread(`Tipo de juego de preferencia`, Value, fill = 0) %>%
-  select(-ID)
+  dplyr::select(-ID)
 ```
 
 Arreglamos la multiplicidad del tipo de plataforma
@@ -215,7 +215,7 @@ DF <- DF %>%
   unnest() %>%
   mutate(Value = 1) %>%
   spread(`Juegas más en móvil, PC o en Consola`, Value, fill = 0) %>%
-  select(-ID)
+  dplyr::select(-ID)
 ```
 
 Continuamos eliminando las columnas innecesarias.
@@ -689,7 +689,7 @@ Las variables de uso de videojuegos son `Gasto`,`Costo`,`Frecuencia`,`Amigos`,`F
 
 Veamos cual es el porcentaje de representacion de cada sexo:
 ```{r}
-barplot( (table(DF$Sexo)/sum(!is.na(DF$Sexo)))*100
+barplot( sort((table(DF$Sexo)/sum(!is.na(DF$Sexo)))*100,decreasing=T)
         ,cex.names = 0.6
         ,ylim = c(0,110)
         ,main = "Variable Sexo"
@@ -720,7 +720,7 @@ Claramente no se debe exclusivamente a esto. Podria deberse a la menor represent
 Veamos cual es nuestra distribución de edades
 ```{r}
 hist(DF$Edad
-     ,breaks = seq(10,35)
+     ,breaks = seq(10.5,35.5,1)
      ,main = "Edades"
      , ylab = "Frecuencia"
      , xlab = "Edad"
@@ -732,10 +732,20 @@ Ahora veamos si hay alguna relación entre Edad y la mediana de las Horas_juego
 Edad_HorasPromedio = DF %>%
       group_by(Edad) %>%
       summarise(Mean = median(Horas_juego, na.rm = T))
-barplot(pull(Edad_HorasPromedio[2],-1)[-12]
-        ,names.arg = c('16','17','18','19','20','21','22','23','24','25','34')
+
+medians_ages = data.frame("edades" = c(16,17,18,19,20,21,22,23,24,25,34),
+                          "medianas" = pull(Edad_HorasPromedio[2],-1)[-12])
+
+medians_ages = rbind(medians_ages,data.frame("medianas"=c(0,0,0,0,0,0,0,0),"edades"=c(26,27,28,29,30,31,32,33)))
+medians_ages = medians_ages[order(medians_ages$edades),]
+
+barplot(medians_ages$medianas
+        ,names = medians_ages$edades
+        #,type = "l"
         ,cex.names = 0.6
         ,main = "Mediana de horas de juego vs edad"
+        ,ylab = "Horas de Juego"
+        ,xlab = "Edad"
         )
 ```
 Pareciera que las personas de alrededor de 22 años tienden a jugar más videojuegos.
@@ -744,10 +754,20 @@ Esto se refuerza con el promedio:
 Edad_HorasPromedio = DF %>%
       group_by(Edad) %>%
       summarise(Mean = mean(Horas_juego, na.rm = T))
-barplot(pull(Edad_HorasPromedio[2],-1)[-12]
-        ,names.arg = c('16','17','18','19','20','21','22','23','24','25','34')
+
+medians_ages = data.frame("edades" = c(16,17,18,19,20,21,22,23,24,25,34),
+                          "medianas" = pull(Edad_HorasPromedio[2],-1)[-12])
+
+medians_ages = rbind(medians_ages,data.frame("medianas"=c(0,0,0,0,0,0,0,0),"edades"=c(26,27,28,29,30,31,32,33)))
+medians_ages = medians_ages[order(medians_ages$edades),]
+
+barplot(medians_ages$medianas
+        ,names = medians_ages$edades
+        #,type = "l"
         ,cex.names = 0.6
         ,main = "Promedio de horas de juego vs edad"
+        ,ylab = "Horas de Juego"
+        ,xlab = "Edad"
         )
 ```
 
@@ -774,6 +794,8 @@ Veamos si el promedio es afectado por los videojuegos.
 
 Notemos que existe un grupo importante de nuestros encuestados que así lo creen, aunque estan en la minoría
 ```{r}
+DF$Afecta = factor(DF$Afecta,levels = c("No","Tal vez","Sí"))
+
 barplot(100*table(DF$Afecta)/sum(!is.na(DF$Afecta))
         , ylim = c(0,100)
         )
@@ -792,8 +814,13 @@ Veamos si la gente juega en promedio más cuando juega con amigos.
 Amigos_Frecuencia = DF %>%
       group_by(Amigos) %>%
       summarise(Mean = mean(Frecuencia, na.rm = T))
-barplot(pull(Amigos_Frecuencia[2],-1)[-12]
-        ,names.arg = c('No','Sí')
+Amigos_Frecuencia$Amigos[Amigos_Frecuencia$Amigos] = "Sí"
+Amigos_Frecuencia$Amigos[Amigos_Frecuencia$Amigos == "FALSE"] = "No"
+
+Amigos_Frecuencia = Amigos_Frecuencia[order(Amigos_Frecuencia$Mean)]
+
+barplot(rev(Amigos_Frecuencia$Mean),
+        names = rev(Amigos_Frecuencia$Amigos)
         ,cex.names = 1
         ,main = "Promedio de horas de juego vs Amigos"
         )
@@ -806,8 +833,15 @@ Aca veremos un gráfico de barras de las frecuencias de qué géneros fueron má
 ```{r}
 preferidos = c(sum(DF$Arcade),sum(DF$Aventura),sum(DF$Deportes_y_carreras),sum(DF$Casual),sum(DF$RPG),sum(DF$MOBA),sum(DF$Peleas),sum(DF$Plataformas),sum(DF$Sandbox),sum(DF$Shooter),sum(DF$Simulacion),sum(DF$Estrategia))
 preferidos_labels = c('Arcade','Aventura','Deportes/Carreras','Casual','RPGs','MOBA','Peleas','Plataformas','Sandbox','Shooter','Simulacion','Estrategia')
-barplot(preferidos
-        , names.arg = preferidos_labels
+
+preferidos_df = data.frame("preferidos" = preferidos,
+                           "nombres" = preferidos_labels)
+preferidos_df = 
+preferidos_df %>% arrange(desc(preferidos))
+
+
+barplot(preferidos_df$preferidos
+        , names.arg = preferidos_df$nombres
         , las = 2
         , cex.names = 0.6
         , main = 'Frecuencias de Preferencia de Géneros'
@@ -818,11 +852,19 @@ Veamos cual es la plataforma favorita de los alumnos de UTEC:
 ```{r}
 preferidos = c(sum(DF$Consola),sum(DF$Movil),sum(DF$PC),sum(DF$Tablet))
 preferidos_labels = c('Consola','Movil','PC','Tablet')
-barplot(preferidos
-        ,names.arg = preferidos_labels
+
+preferidos_df = data.frame("preferidos" = preferidos,
+                           "nombres" = preferidos_labels)
+preferidos_df = 
+preferidos_df %>% arrange(desc(preferidos))
+
+
+barplot(preferidos_df$preferidos
+        , names.arg = preferidos_df$nombres
         , las = 2
         , cex.names = 0.6
-        , main = 'Frecuencias de Preferencia de Plataforma')
+        , main = 'Frecuencias de Preferencia de Plataforma'
+        )
 ```
 
 Claramente los alumnos de la UTEC juegan más en plataformas móviles y en PC.
