@@ -49,7 +49,7 @@ Integrantes
 | 202110071 | Alexandro Martin Chamochumbi Gutierrez (Líder) | alexandro.chamochumb@utec.edu.pe | 100% |
 | 202110280 | Juan Diego Prochazka Zegarra | juan.prochazka@utec.edu.pe | 100% |
 | 202120445 | Jose Eddison Pinedo Espinoza | jose.pinedo@utec.edu.pe | 100% |
-|  |  | @utec.edu.pe | 100% |
+| 202010529 | Arturo Enrique Villar Marcelo | arturo.villar@utec.edu.pe | 100% |
 | 201820100 | Angello Italo Gino Paretto Castre | angello.paretto@utec.edu.pe | 100% |
 
 - Estadística y Probabilidades I
