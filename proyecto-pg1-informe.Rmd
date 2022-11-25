@@ -141,8 +141,8 @@ Obtuvo una muestra cuyo tamaño es de `r nrow(DF)` observaciones.
 **Plataformas**
 | Plataforma consola | Categórica nominal  | Juega en consola |
 | Plataforma móvil | Categórica nominal  | Juega en móvil |
-| Plataforma PC | Categórica nominal  | PC |
-| Plataforma tablet | Categórica nominal  | Tablet |
+| Plataforma PC | Categórica nominal  | Juega en PC |
+| Plataforma tablet | Categórica nominal  | Juega en Tablet |
 
 Encontramos 37 variables
 
@@ -1060,3 +1060,37 @@ $$
      \end{cases} 
 $$
 Creemos que esto se debe a que los Utecsinos eligen videojuegos baratos exponencialmente mas que videojuegos caros, y que una ves han decidido en que categoria quieren tener un videojuego el precio no es un factor tan importante. Esto explica por que la variable _holistica_ se ajusta a un modelo exponencial.
+
+Consideremos que queremos elegir 20 estudiantes al azar, considerando que en UTEC las aulas hay salones de 20 estudiantes. Planteamos como caso de éxito el hecho de que los estudiantes elegidos les guste menor o igual de 3 géneros de juego, ya que de acuerdo a nuestra muestra, les gusta pocos géneros de juego por lo general.
+La probabilidad de que les guste menos o igual a 3 géneros de juego, para nuestro caso sería de 85/202, equivalente a 0.42 aproximadamente. Entonces el Modelo Binomial se vería de la siguiente manera:
+X -> número de estudiantes que les gusta 3 a menos géneros de juegos en una aula de 20 alumnos
+X∼Bin(202,0.42)
+n -> número de muestras (20 encuestados)
+p -> probabilidad de que la persona seleccionada le guste 3 a menos géneros de juegos es (85/202)
+Ejemplo: La probabilidad de que 5 alumnos (cantidad de personas en un grupo de trabajo por lo general en los cursos) en un aula le guste 3 a menos géneros de juegos.
+Tomamos en cuenta este análisis saber que probable sería tener un grupo en un curso y saber a todos los integrantes del grupo si les gusta por lo general la misma cantidad de géneros de juegos, usamos una distribución negativa binomial.
+
+```{r}
+r <- 5
+p <- 0.42
+n <- 20 - r
+
+pDB <- dnbinom(x = n, size = r, prob = p)
+
+data.frame(x = 0:17, prob = dnbinom(x = 0:17, size = r, prob = p)) %>%
+  mutate(Failures = ifelse(x == n, n, "otro")) %>%
+ggplot(aes(x = factor(x), y = prob, fill = Failures)) +
+  geom_col() +
+  geom_text(
+    aes(label = round(prob,3), y = prob + 0.01),
+    position = position_dodge(0.5),
+    size = 2.5,
+    vjust = 1
+  ) +
+  labs(title = "Probabilidad cuando r es 5, Exito cuando x es 20 Intentos", 
+       x = "Intentos fallidos cuando: (x - r)",
+       y = "Probabilidad de exito")
+``` 
+De la gráfica obtenemos que lo más probable es que se presenten 5 intentos fallidos con un porcentaje de 10,8%, es un número de intentos fallidos mediano ya que un 42% de alumnos les gusta pocos géneros de juego.
+
+
