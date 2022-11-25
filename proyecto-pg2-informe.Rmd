@@ -960,9 +960,9 @@ hist(DF$Costo,
      prob = T
      )
 ```
-Hay dos interpretaciones que hemos tomado para esta variable: El caso _holistico_^[En este caso suponemos que la variable se explica con un solo modelo simple, a diferencia del caso segmentado que propone que realmente estamo viendo la suma de tres modelos] y el caso _segmentado_. Si bien el caso holistico se ajusta bien al modelo, creemos que el caso segmentado es una mejor descripcion de lo que realmente esta ocurriendo.
+Hay dos interpretaciones que hemos tomado para esta variable: El caso _holistico_ En este caso suponemos que la variable se explica con un solo modelo simple, a diferencia del caso segmentado que propone que realmente estamo viendo la suma de tres modelos y el caso _segmentado_. Si bien el caso holistico se ajusta bien al modelo, creemos que el caso segmentado es una mejor descripcion de lo que realmente esta ocurriendo.
 
-### Caso _Holistico_
+### Caso _Holistico_  
 
 En este caso suponemos que la variable se explica con una distribucion unica. Dada la forma de la variable es natural suponer que es una exponencial. La evidencia empirica, notablemente la media (`r round(mean(DF$Costo, na.rm=T),2)`) y la desviacion estandar (`r round(sd(DF$Costo, na.rm=T),2)`) parecen soportar esta tesis. Asumiendo que asi fuese podriamos decir que la variable es aproximadamente exponencial con parametro 0.02.
 
@@ -998,7 +998,7 @@ text(x=c(0,110,215),y=c(20),c("Indie","AA", "AAA"))
 ```
 
 
-"A ojo" vemos tres grupos de observaciones, unas en el rango de 0 hasta 100, otras de 100 hasta 200 y un ultimo grupo entre 200 y 300. Esto tiene sentido si pensamos que los juegos "indie" son considerablemente mas baratos, que los juegos AA estan alrededor de los \$40 (S\. ~160^[A la taza de cambio de 4 soles por dolar]) y que los titulos AAA se encuentran a precios de ~ \$70 (~S.\ 280). Por lo tanto nuestra muestra en realidad es un conjunto que resulta de la union de observaciones en tres variables aleatorias. La variable categorica que los separa no fue recogida en el proceso de recoleccion de datos y esfuerzos para reconstruirla a partir de las que tenemos (en particular las referentes a los generos que juega) han sido infructuosos.
+"A ojo" vemos tres grupos de observaciones, unas en el rango de 0 hasta 100, otras de 100 hasta 200 y un ultimo grupo entre 200 y 300. Esto tiene sentido si pensamos que los juegos "indie" son considerablemente mas baratos, que los juegos AA estan alrededor de los \$40 (S\. ~160** A la taza de cambio de 4 soles por dolar) y que los titulos AAA se encuentran a precios de ~ \$70 (~S.\ 280). Por lo tanto nuestra muestra en realidad es un conjunto que resulta de la union de observaciones en tres variables aleatorias. La variable categorica que los separa no fue recogida en el proceso de recoleccion de datos y esfuerzos para reconstruirla a partir de las que tenemos (en particular las referentes a los generos que juega) han sido infructuosos.
 
 $$ \mathbb{C}_{total} = \mathbb{C_i} \cup \mathbb{C}_{AA} \cup \mathbb{C}_{AAA} $$
 
@@ -1216,6 +1216,7 @@ En la gráfica se puede apreciar que las notas se encuentran en el rango de 9 a 
 
 En este caso nos planteamos la siguiente pregunta ¿Cual es la probabilidad de que los estudiantes tengan un promedio aprobatorio (10.5)?
 La función probabilidad sería P(10.5<=X<=20) el cálculo seria P(X<20) - P(X<10.5)
+
 ```{r}
 pnorm(20,mu_Pro,sd_Pro)-pnorm(10.5,mu_Pro,sd_Pro)
 ```
@@ -1223,5 +1224,11 @@ pnorm(20,mu_Pro,sd_Pro)-pnorm(10.5,mu_Pro,sd_Pro)
 La probabilidad de que los alumnos encuestados tengan un promedio aprobatorio jugando videojuegos es de 0.8993336
 
 
+# Bibliografía
+Mendenhall, W., Beaver, R., & Beaver, B. (2014). Introduccion a la Probabilidad y Estadistica (14a ed.). Cengage Learning Editores S.A. de C.V.
 
+Peng, R. D. (2014, febrero 25). R programming for data science. Leanpub. https://leanpub.com/rprogramming
 
+Peng, R. D. (2015, abril 27). Exploratory data analysis with R. Leanpub. https://leanpub.com/exdata
+
+Ross, S. M. (2021). Introduction to probability and statistics for engineers and scientists (6a ed.). Academic Press.
