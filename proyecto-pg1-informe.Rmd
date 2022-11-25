@@ -19,7 +19,7 @@ output:
 ```{r echo=FALSE}
 # dependencias
 ## encontrar dependencias no instaladas
-dependencias <- c('readr','dplyr','rstudioapi','magrittr','tidyverse','stringi','fitdistrplus')
+dependencias <- c('readr','dplyr','rstudioapi','magrittr','tidyverse','stringi','fitdistrplus', 'distrMod', 'actuar','stats4', 'MASS', 'survival', 'distrMod' )
 dependencias_no_instaladas <- dependencias[!(dependencias %in% installed.packages()[,'Package'])]
 # instalarlas
 if(length(dependencias_no_instaladas)>0) install.packages(dependencias_no_instaladas)
@@ -49,7 +49,7 @@ Integrantes
 | 202110071 | Alexandro Martin Chamochumbi Gutierrez (Líder) | alexandro.chamochumb@utec.edu.pe | 100% |
 | 202110280 | Juan Diego Prochazka Zegarra | juan.prochazka@utec.edu.pe | 100% |
 | 202120445 | Jose Eddison Pinedo Espinoza | jose.pinedo@utec.edu.pe | 100% |
-|  |  | @utec.edu.pe | 100% |
+| 202010529 | Arturo Enrique Villar Marcelo | arturo.villar@utec.edu.pe | 100% |
 | 201820100 | Angello Italo Gino Paretto Castre | angello.paretto@utec.edu.pe | 100% |
 
 - Estadística y Probabilidades I
@@ -99,87 +99,50 @@ Obtuvo una muestra cuyo tamaño es de `r nrow(DF)` observaciones.
 
 ## Descripción de las variables de estudio
 
-+ `Codigo`: Tipo categórica nominal, está conformada por 9 dígitos. 
 
-+ `Sexo`: Tipo categórica nominal, admite las siguientes respuestas: Masculino, Femenino o Prefiero no especificar.
+| Variable | Tipo | Descripción | 
+|-------------------|-------------|---------------|
+| Código | Categórica nominal | Identificador de alumno en UTEC |
+| Sexo | Categórica nominal  | Orientación sexual |
+| Edad | Numérica discreta | Edad actual del encuestado |
+| Carrera | Categórica nominal  | Carrera cursada |
+| Ciclo | Numérica discreta | Ciclo académico |
+| Créditos | Numérica discreta | Cantidad de créditos |
+| Vive solo | Categórica nominal  | Afirmación o negación si vive solo |
+| Ha jugado | Categórica nominal  | Afirmación o negación si ha jugado videojuegos |
+| Gasto | Numérica continua  | Gasto en videojuegos el ultimo año |
+| Costo | Numérica continua  | Precio del ultimo juego adquirido |
+| Frecuencia |  Numérica continua | Horas de juego a la semana |
+| Estudio | Numérica continua | Horas de estudio a la semana |
+| Amigos | Categórica nominal | Afirmación o negación si juega con amigos |
+| Frecuencia amigos | Numérica continua | Horas de juego con amigos |
+| Promedio | Numérica continua | Promedio alcanzado en el ciclo pasado o promedio de 5to de secundaria si el alumno de primer ciclo |
+| Afecta | Categórica nominal  | Afirmación o negación si cree que jugar afecta a sus estudios |
+| Favorito | Categórica nominal | Videojuego favorito |
+| Horas de juego | Numérica continua  | Horas de juego |
+| Jugar es divertido |  Categórica ordinal | Calificación de del 1 - 7 si es divertido jugar |
+| Continua | Categórica ordinal | Calificación de del 1 - 7 si continua jugando después de cada partida |
+| Bueno | Categórica ordinal | Calificación del 1 - 7 si es bueno jugando |
 
-+ `Edad`: Tipo numérica discreta positiva.
+**Preferencias**
+| Shooter | Categórica ordinal  | Gusto por el genero si / no |
+| Deporte y carreras | Categórica ordinal  | Gusto por el genero si / no |
+| Plataformas | Categórica ordinal  | Gusto por el genero si / no |
+| Peleas | Categórica ordinal  | Gusto por el genero si / no |
+| Estrategia | Categórica ordinal  | Gusto por el genero si / no |
+| Simulación | Categórica ordinal  | Gusto por el genero si / no |
+| Aventura | Categórica ordinal  | Gusto por el genero si / no |
+| RPG | Categórica ordinal  | Gusto por el genero si / no |
+| Sandbox | Categórica ordinal  | Gusto por el genero si / no |
+| Casual | Categórica ordinal  | Gusto por el genero si / no |
+| Arcade | Categórica ordinal  | Gusto por el genero si / no |
+| MOBA | Categórica ordinal  | Gusto por el genero si / no |
 
-+ `Carrera`: Tipo categórica nominal, admite carreras ofrecidas en la UTEC.
-
-+ `Ciclo`: Tipo numérica discreta, su restricción es que sea mayor o igual 1.
-
-+ `Creditos`: Tipo numérica discreta, su restricción es que sea mínimo 16 y máximo 30.
-
-+ `Vive_solo`: Tipo categórica nominal, puede ser Sí o No.
-
-+ `Ha_jugado`: Tipo categórica nominal, puede ser Sí o No. Corresponde a si el alumno ha jugado algún videojuego.
-
-+ `Gasto`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Cuanto gastó el alumno en videojuegos en soles este año.
-
-+ `Costo`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Costo del último juego que el alumno compro.
-
-+ `Frecuencia`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Cuál es la cantidad de horas de juego del alumno en la semana.
-
-+ `Estudio`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Cuánto tiempo dedica el alumno a estudiar en la semana.
-
-+ `Amigos`: Tipo categórica nominal, puede ser Sí o No. Refiere a si el alumno juega con amigos.
-
-+ `Frecuencia_amigos`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Refiere a la cantidad de horas que el alumno dedica a jugar con amigos en la semana.
-
-+ `Promedio`: Tipo numérica continua, el valor debe ser mínimo 0 y máximo 20. Promedio del ciclo pasado o 5to de secundaria del alumno en caso sea primer ciclo.
-
-+ `Afecta`: Tipo categórica nominal, puede ser Sí, No o Tal vez. Refiere a si el alumno piensa que el jugar videojuegos afecta sus estudios.
-
-+ `Favorito`: Tipo categórica nominal, respuesta abierta. Videojuego favorito del alumno.
-
-+ `Horas_juego`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Horas de juego del alumno.
-
-+ `Jugar_es_divertido`: Tipo categórica ordinal, admite valores enteros entre 1 y 7. Se refiere a si jugar es divertido para el alumno.
-
-+ `Continua`: Tipo categórica ordinal, admite valores enteros entre 1 y 7. Refiere a si al comenzar a jugar un alumno quiere seguir haciéndolo.
-
-+ `Bueno`: Tipo categórica ordinal, admite valores enteros entre 1 y 7. Refiere a si el alumno se considera bueno en videojuegos.
-
-+ Preferencias: Las variables de preferencia son categóricas ordinales y admiten Si o No, refieren a si al alumno le gusta el género.
-
-  + `Shooter`
-
-  + `Deporte_y_carreras`
-  
-  + `Plataformas`
-  
-  + `Peleas`
-  
-  + `Estrategia`
-  
-  + `Simulacion`
-  
-  + `Aventura`
-  
-  + `RPG`
-  
-  + `Sandbox`
-  
-  + `Casual`
-  
-  + `Arcade`
-  
-  + `MOBA`
-  
-
-+ Plataforma: Las variables de plataforma pueden ser 'Si' o 'No'
-
-  + `plataforma_consola`: Tipo categórica nominal. Refiere a si el alumno juega en móvil.
-
-  + `plataforma_movil`: Tipo categórica nominal. Refiere a si el alumno juega en móvil.
-  
-  + `plataforma_pc`: Tipo categórica nominal. Refiere a si el alumno juega en pc.
-  
-  + `plataforma_tablet`: Tipo categórica nominal. Refiere a si el alumno juega en tablet.
-
-
-
+**Plataformas**
+| Plataforma consola | Categórica nominal  | Juega en consola |
+| Plataforma móvil | Categórica nominal  | Juega en móvil |
+| Plataforma PC | Categórica nominal  | Juega en PC |
+| Plataforma tablet | Categórica nominal  | Juega en Tablet |
 
 Encontramos 37 variables
 
@@ -1097,3 +1060,111 @@ $$
      \end{cases} 
 $$
 Creemos que esto se debe a que los Utecsinos eligen videojuegos baratos exponencialmente mas que videojuegos caros, y que una ves han decidido en que categoria quieren tener un videojuego el precio no es un factor tan importante. Esto explica por que la variable _holistica_ se ajusta a un modelo exponencial.
+
+Consideremos que queremos elegir 20 estudiantes al azar, considerando que en UTEC las aulas hay salones de 20 estudiantes. Planteamos como caso de éxito el hecho de que los estudiantes elegidos les guste menor o igual de 3 géneros de juego, ya que de acuerdo a nuestra muestra, les gusta pocos géneros de juego por lo general.
+La probabilidad de que les guste menos o igual a 3 géneros de juego, para nuestro caso sería de 85/202, equivalente a 0.42 aproximadamente. Entonces el Modelo Binomial se vería de la siguiente manera:
+X -> número de estudiantes que les gusta 3 a menos géneros de juegos en una aula de 20 alumnos
+X∼Bin(202,0.42)
+n -> número de muestras (20 encuestados)
+p -> probabilidad de que la persona seleccionada le guste 3 a menos géneros de juegos es (85/202)
+Ejemplo: La probabilidad de que 5 alumnos (cantidad de personas en un grupo de trabajo por lo general en los cursos) en un aula le guste 3 a menos géneros de juegos.
+Tomamos en cuenta este análisis saber que probable sería tener un grupo en un curso y saber a todos los integrantes del grupo si les gusta por lo general la misma cantidad de géneros de juegos, usamos una distribución negativa binomial.
+
+## Generos
+```{r}
+DF$Cuantos_Generos = DF$Arcade + DF$Aventura + DF$Deportes_y_carreras + DF$Estrategia + DF$Casual + DF$RPG + DF$MOBA + DF$Shooter + DF$Simulacion + DF$Peleas + DF$Plataformas + DF$Sandbox
+hist(DF$Cuantos_Generos,
+     main="Histograma de cuantos generos prefieren",
+     ylab = "Densidad",
+     xlab = "Número de generos que gustan",
+     prob = T
+     )
+```
+
+```{r}
+r <- 5
+p <- 0.42
+n <- 20 - r
+
+pDB <- dnbinom(x = n, size = r, prob = p)
+
+data.frame(x = 0:17, prob = dnbinom(x = 0:17, size = r, prob = p)) %>%
+  mutate(Failures = ifelse(x == n, n, "otro")) %>%
+ggplot(aes(x = factor(x), y = prob, fill = Failures)) +
+  geom_col() +
+  geom_text(
+    aes(label = round(prob,3), y = prob + 0.01),
+    position = position_dodge(0.5),
+    size = 2.5,
+    vjust = 1
+  ) +
+  labs(title = "Probabilidad cuando r es 5, Exito cuando x es 20 Intentos", 
+       x = "Intentos fallidos cuando: (x - r)",
+       y = "Probabilidad de exito")
+``` 
+De la gráfica obtenemos que lo más probable es que se presenten 5 intentos fallidos con un porcentaje de 10,8%, es un número de intentos fallidos mediano ya que un 42% de alumnos les gusta pocos géneros de juego.
+
+
+## Creditos
+
+```{r}
+library(stats4)
+library(MASS)
+library(survival)
+library(distrMod)
+```
+
+```{r}
+library(distrMod)
+vector = DF$Creditos[!DF$Creditos ==0]
+creditos = na.omit(vector)
+pois.f<- fitdist(c(creditos), "pois")# Poisson
+summary(pois.f)
+credito_maximo = max(DF$Creditos,na.rm=TRUE)
+x1 <- 1:credito_maximo
+lambda_poisson <- 18.61692
+plot(dpois(x1, lambda_poisson), type = "h", lwd = 2,
+     main = "Probabilidad Poisson",
+     ylab = "P(X = x)", xlab = "Creditos Academicos")
+```
+
+```{r}
+hist(creditos,prob=TRUE,main="Histograma de variable Creditos",ylab="Densidad",xlab="Creditos")
+lines(density(creditos), col = 4, lwd = 2)
+
+#Probabilidad de que una persona lleve mas de 16 creditos academicos 
+cpp = ppois(16, lambda = lambda_poisson, lower.tail = FALSE)
+round(cpp,2)
+
+```
+Obtenemos como resultado que la probabilidad de que un estudiante lleve más de 16 creditos academicos es del 68%
+
+```{r}
+vector3 = DF$Gasto[!DF$Gasto ==0]
+maximo_gasto = max(DF$Gasto)
+gastar = na.omit(vector3)
+exp.f<- fitdist(c(gastar), "exp")# Exponencial
+summary(exp.f)
+lambda_expo <- 0.003150127
+xx <- 1:maximo_gasto
+```
+
+```{r}
+plot(dexp(xx, lambda_expo), type = "h", lwd = 1,
+     main = "Probabilidad exponencial",
+     ylab = "P(X = x)", xlab = "Dinero Gastado")
+
+```
+
+```{r}
+hist(gastar,prob=TRUE,main="Histograma de variable Gasto",ylab="Densidad",xlab="Dinero Gastado")
+curve(dexp(x, rate = 0.003150127), col = 2, lty = 2, lwd = 2, add = TRUE)
+```
+
+```{r}
+#Probabilidad de que una persona gaste igual o menos que 500 soles
+messi <- pexp(500,rate = lambda_expo,lower.tail = TRUE)
+round(messi,2)
+
+```
+Obtenemos como resultado que la probabilidad de que un estudiante gaste igual o menos que 500 soles es del 79%
