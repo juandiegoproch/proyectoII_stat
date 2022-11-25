@@ -939,16 +939,15 @@ Claramente los alumnos de la UTEC juegan más en plataformas móviles y en PC.
 
 Hemos decidido tomar como variables de interes las siguientes:
 
--   Promedio,
-
--   Creditos,
-
--   Gasto,
-
 -   Costo, 
 
 -   Generos
 
+-   Creditos,
+
+-   Promedio,
+
+-   Gasto,
 
 ## Costo:
 La densidad del costo se ve asi:
@@ -1168,3 +1167,61 @@ round(messi,2)
 
 ```
 Obtenemos como resultado que la probabilidad de que un estudiante gaste igual o menos que 500 soles es del 79%
+
+
+## Promedio
+```{r}
+hist(DF$Promedio)
+```
+
+Para analizar el comportamiento de los promedios declarados por los alumnos entrevistados se ha elaborado el histograma de probabilidad de esta variable, que ha permitido validar no solo el gran porcentaje de notas aprobatorias de estos alumnos, sino que las mismas se concentran en su mayoria en promedio 14  
+
+```{r}
+hist(DF$Promedio,probability = 1, main = "Probabilidad del promedio", ylab = "Probabilidad",breaks = 20)
+```
+
+Para poder obtener ver los valores explícita mente de las probabilidades se evidencia en la siguiente tabla.
+
+```{r}
+probPromedio <- prop.table(table(DF$Promedio))
+probPromedio <- data.frame(probPromedio)
+names(probPromedio)[names(probPromedio)=='Freq'] <- 'Probabilidad'
+probPromedio
+```
+
+
+Se calcula la media:
+```{r}
+mu_Pro<-mean(DF$Promedio,na.rm=T)
+mu_Pro
+```
+
+La media es: 14.3997
+
+Calculamos la desviación estándar:
+```{r}
+sd_Pro<-sd(DF$Promedio,na.rm=T)
+sd_Pro
+```
+
+El valor de la desviación estándar es: 2.76536
+Con los datos obtenidos se va graficar la función normal en el histograma
+
+```{r}
+hist(DF$Promedio,probability = 1,main = "Histograma del Promedio",xlab = "Promedio", breaks = 20)
+curve(dnorm(x,mu_Pro,sd_Pro),lwd=2,add=T)
+```
+
+En la gráfica se puede apreciar que las notas se encuentran en el rango de 9 a 20.
+
+En este caso nos planteamos la siguiente pregunta ¿Cual es la probabilidad de que los estudiantes tengan un promedio aprobatorio (10.5)?
+La función probabilidad sería P(10.5<=X<=20) el cálculo seria P(X<20) - P(X<10.5)
+```{r}
+pnorm(20,mu_Pro,sd_Pro)-pnorm(10.5,mu_Pro,sd_Pro)
+```
+
+La probabilidad de que los alumnos encuestados tengan un promedio aprobatorio jugando videojuegos es de 0.8993336
+
+
+
+
