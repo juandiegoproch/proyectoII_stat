@@ -19,7 +19,7 @@ output:
 ```{r echo=FALSE}
 # dependencias
 ## encontrar dependencias no instaladas
-dependencias <- c('readr','dplyr','rstudioapi','magrittr','tidyverse','stringi','fitdistrplus')
+dependencias <- c('readr','dplyr','rstudioapi','magrittr','tidyverse','stringi','fitdistrplus', 'distrMod', 'actuar','stats4', 'MASS', 'survival', 'distrMod' )
 dependencias_no_instaladas <- dependencias[!(dependencias %in% installed.packages()[,'Package'])]
 # instalarlas
 if(length(dependencias_no_instaladas)>0) install.packages(dependencias_no_instaladas)
@@ -1093,4 +1093,70 @@ ggplot(aes(x = factor(x), y = prob, fill = Failures)) +
 ``` 
 De la gráfica obtenemos que lo más probable es que se presenten 5 intentos fallidos con un porcentaje de 10,8%, es un número de intentos fallidos mediano ya que un 42% de alumnos les gusta pocos géneros de juego.
 
+```{r}
+
+library(stats4)
+library(MASS)
+library(survival)
+library(distrMod)
+```
+
+```{r}
+library(distrMod)
+vector = DF$Creditos[!DF$Creditos ==0]
+creditos = na.omit(vector)
+pois.f<- fitdist(c(creditos), "pois")# Poisson
+summary(pois.f)
+credito_maximo = max(DF$Creditos,na.rm=TRUE)
+x1 <- 1:credito_maximo
+lambda_poisson <- 18.61692
+plot(dpois(x1, lambda_poisson), type = "h", lwd = 2,
+     main = "Probabilidad Poisson",
+     ylab = "P(X = x)", xlab = "Creditos Academicos")
+```
+
+```{r}
+hist(creditos,prob=TRUE,main="Histograma de variable Creditos",ylab="Densidad",xlab="Creditos")
+lines(density(creditos), col = 4, lwd = 2)
+
+#Probabilidad de que una persona lleve mas de 16 creditos academicos 
+cpp = ppois(16, lambda = lambda_poisson, lower.tail = FALSE)
+round(cpp,2)
+
+```
+Obtenemos como resultado que la probabilidad de que un estudiante lleve más de 16 creditos academicos es del 68%
+
+```{r}
+vector3 = DF$Gasto[!DF$Gasto ==0]
+maximo_gasto = max(DF$Gasto)
+gastar = na.omit(vector3)
+exp.f<- fitdist(c(gastar), "exp")# Exponencial
+summary(exp.f)
+lambda_expo <- 0.003150127
+xx <- 1:maximo_gasto
+```
+
+```{r}
+plot(dexp(xx, lambda_expo), type = "h", lwd = 1,
+     main = "Probabilidad exponencial",
+     ylab = "P(X = x)", xlab = "Dinero Gastado")
+
+```
+
+```{r}
+hist(gastar,prob=TRUE,main="Histograma de variable Gasto",ylab="Densidad",xlab="Dinero Gastado")
+curve(dexp(x, rate = 0.003150127), col = 2, lty = 2, lwd = 2, add = TRUE)
+```
+
+```{r}
+#Probabilidad de que una persona gaste igual o menos que 500 soles
+messi <- pexp(500,rate = lambda_expo,lower.tail = TRUE)
+round(messi,2)
+
+```
+Obtenemos como resultado que la probabilidad de que un estudiante gaste igual o menos que 500 soles es del 79%
+
+
+
+Conclusiones:
 
