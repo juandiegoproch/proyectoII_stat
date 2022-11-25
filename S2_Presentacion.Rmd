@@ -260,16 +260,6 @@ Para analizar el comportamiento de los promedios declarados por los alumnos entr
 hist(DF$Promedio,probability = 1, main = "Probabilidad del promedio", ylab = "Probabilidad",breaks = 20)
 ```
 
-Para poder obtener ver los valores explícita mente de las probabilidades se evidencia en la siguiente tabla.
-
-```{r}
-probPromedio <- prop.table(table(DF$Promedio))
-probPromedio <- data.frame(probPromedio)
-names(probPromedio)[names(probPromedio)=='Freq'] <- 'Probabilidad'
-probPromedio
-```
-
-
 Se calcula la media:
 ```{r}
 mu_Pro<-mean(DF$Promedio,na.rm=T)
@@ -303,7 +293,7 @@ pnorm(20,mu_Pro,sd_Pro)-pnorm(10.5,mu_Pro,sd_Pro)
 
 La probabilidad de que los alumnos encuestados tengan un promedio aprobatorio jugando videojuegos es de 0.8993336
 
-
+# Gracias
 
 
 
