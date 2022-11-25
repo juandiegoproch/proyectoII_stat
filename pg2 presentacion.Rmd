@@ -16,6 +16,7 @@ library(stats4)
 library(MASS)
 library(survival)
 library(distrMod)
+library(fitdistrplus)
 
 DF <- read_csv("limpio_2.csv")
 
@@ -35,141 +36,6 @@ Nuestro estudio busca recolectar datos del perfil universitario de los estudiant
   
 ![Diagrama de Gantt](p1.jpg)
 
-# Datos
-
-+ **Proceso de recolección de datos**
-  
-Los datos se recolectaron a través de una encuesta de _Google Forms_ de que fue circulada por la universidad. También se aprovechó la presencialidad para conseguir encuestas que fueron incentivadas con un dulce en la Universidad durante el 27 y 28 de septiembre del 2022 en horas del día. No encontramos algún factor de influencia a partir de esta metodología.
-Utilizamos _Google Forms_ porque es gratuita, permite la restricción de dominios de las variables (facilitando la limpieza) y facilita compartir la encuesta. Para analizar los datos en R, se descargaron las respuestas en un archivo de formato `.csv`.
-
-## Población, muestra y muestreo 
-
-+ Población de estudio: Alumnos de pregrado de UTEC.
-
-+ Unidad muestral: Alumno.
-
-+ Muestreo: Muestreo por conveniencia. Se hizo llegar la encuesta a estudiantes por medio digital que dieron su tiempo y 
-Obtuvo una muestra cuyo tamaño es de `r nrow(DF)` observaciones.
-
-+ Representatividad: Consideramos que la encuesta es representativa de la población de UTEC a pesar de que tenemos solo un total del `r round((nrow(DF)/3200)*100,2)`% del universo de alrededor de 3200 alumnos porque no encontramos ningún factor de influencia en la recolección de los datos.
-
-# Variables de estudio
-
-Tenemos 2 tipos de variables: 
-
-Las variables de perfil del alumno que son `Sexo`, `Edad`, `Carrera`, `Ciclo`, `Creditos`, `Vive_solo`,`Estudio`,`Promedio` y `Afecta`. Estas nos permiten entender más o menos quién es el alumno.
-
-Las variables de uso de videojuegos que son `Gasto`, `Costo`, `Frecuencia`, `Amigos`, `Frecuencia_amigos`, `Favorito`, `Horas_juego`, las variables que hacen referencia a los géneros preferidos y las que refieren a las plataformas usadas.
-
-- Total: 37 variables.
-
-- 13 numéricas
-
-- 24 categóricas
-
-## Limpieza de base de datos
-
-36 de las variables necesitaban algún tipo de limpieza como lo eran:
-
-- Nombres inadecuados o con un formato inadecuado (valores que pueden ser corregidos)
-- Variables vacías o irrelevantes (NA)
-- Cambios de tipo de variable (numeric o booleano)
-- En código, eliminación de códigos duplicados.
-- En plataforma y preferencia, se soluciono la multiplicidad de valores.
-
-Además, se renombraron las columnas a nombres más convenientes y se eliminaron las que nos resultan innecesarias.
-
-# Análisis descriptivo
-
-## Sexo
-
-Veamos cual es el porcentaje de representación de cada sexo:
-
-```{r}
-barplot( (table(DF$Sexo)/sum(!is.na(DF$Sexo)))*100
-        ,cex.names = 0.6
-        ,ylim = c(0,110)
-        ,main = "Variable Sexo"
-        ,axes = TRUE
-        ,xlab = "Respuesta"
-        ,ylab = "Porcentaje"
-        )
-```
-
-Analicemos si, en promedio, alguno de los sexos gasta más que el otro en videojuegos:
-
-```{r}
-print(
-DF %>%
-  group_by(Sexo) %>%
-  summarise_at(vars(Gasto), list(name = mean))
-)
-```
-Podemos ver que en promedio las personas que se identifican como de Sexo masculino tienden a gastar mas dinero en promedio en videojuegos. Utilizaremos la mediana para poder corroborar si esto se debe a algún dato atípico.
-```{r}
-print(
-DF %>%
-  group_by(Sexo) %>%
-  summarise_at(vars(Gasto), list(name = median))
-)
-```
-Claramente no se debe exclusivamente a esto. Podria deberse a la menor representacion de las personas de sexo femenino en nuestros datos.
-
-# Edad
-
-Veamos cuál es nuestra distribución de edades
-
-```{r}
-hist(DF$Edad
-     ,breaks = seq(10,35)
-     ,main = "Edades"
-     , ylab = "Frecuencia"
-     , xlab = "Edad"
-     )
-```
-
-Ahora veamos si hay alguna relación entre Edad y la mediana de las Horas_juego
-
-```{r}
-Edad_HorasPromedio = DF %>%
-      group_by(Edad) %>%
-      summarise(Mean = median(Horas_juego, na.rm = T))
-barplot(pull(Edad_HorasPromedio[2],-1)[-12]
-        ,names.arg = c('16','17','18','19','20','21','22','23','24','25','34')
-        ,cex.names = 0.6
-        ,main = "Mediana de horas de juego vs edad"
-        )
-```
-
-Pareciera que las personas de alrededor de 22 años tienden a jugar más videojuegos.
-Esto se refuerza con el promedio:
-
-```{r}
-Edad_HorasPromedio = DF %>%
-      group_by(Edad) %>%
-      summarise(Mean = mean(Horas_juego, na.rm = T))
-barplot(pull(Edad_HorasPromedio[2],-1)[-12]
-        ,names.arg = c('16','17','18','19','20','21','22','23','24','25','34')
-        ,cex.names = 0.6
-        ,main = "Promedio de horas de juego vs edad"
-        )
-```
-
-
-# Géneros de juegos preferidos
-
-Vamos a ver cuales son los géneros que los estudiantes más prefieren:
-Aca veremos un gráfico de barras de las frecuencias de qué géneros fueron más preferidos:
-
-```{r}
-preferidos = c(sum(DF$Arcade),sum(DF$Aventura),sum(DF$Deportes_y_carreras),sum(DF$Casual),sum(DF$RPG),sum(DF$MOBA),sum(DF$Peleas),sum(DF$Plataformas),sum(DF$Sandbox),sum(DF$Shooter),sum(DF$Simulacion))
-preferidos_labels = c('Arcade','Aventura','Deportes/Carreras','Casual','RPGs','MOBA','Peleas','Plataformas','Sandbox','Shooter','Simulacion')
-barplot(preferidos
-        ,names.arg = preferidos_labels
-        , las = 2
-        , cex.names = 0.6
-        , main = 'Frecuencias de Preferencia de Géneros')
-```
 
 # Analisis Probabilistico
 
@@ -185,23 +51,6 @@ hist(DF$Costo,
      prob = T
      )
 ```
-Hay dos interpretaciones que hemos tomado para esta variable: El caso _holistico_ En este caso suponemos que la variable se explica con un solo modelo simple, a diferencia del caso segmentado que propone que realmente estamo viendo la suma de tres modelos y el caso _segmentado_. Si bien el caso holistico se ajusta bien al modelo, creemos que el caso segmentado es una mejor descripcion de lo que realmente esta ocurriendo.
-
-### Caso _Holistico_
-
-En este caso suponemos que la variable se explica con una distribucion unica. Dada la forma de la variable es natural suponer que es una exponencial. La evidencia empirica, notablemente la media (`r round(mean(DF$Costo, na.rm=T),2)`) y la desviacion estandar (`r round(sd(DF$Costo, na.rm=T),2)`) parecen soportar esta tesis. Asumiendo que asi fuese podriamos decir que la variable es aproximadamente exponencial con parametro 0.02.
-
-$$\mathbb{X} \sim \text{Exp}(0.02)$$
-
-
-### Caso _Segmentado_
-
-A pesar de lo investigado en el caso anterior, el costo presenta multiples "bultos" dentro de su forma exponencial. Ninguna de las variables conocidas tiene este comportamiento. Por lo tanto suponemos que la variable costo se compone de multiples distribuciones "simples" superpuestas.
-
-Hay quienes no han comprado un juego pagado nunca, y por lo tanto habran marcado cero. Esto significa que S\. 0 como valor discreto tiene una probabilidad mayor que cero de "salir".
-
-De una muestra con tamaño `r sum(!is.na(DF$Costo))` de observaciones que no son NA, hay `r sum(DF$Costo == 0, na.rm = TRUE)` que son cero. Esto significa que el cero tiene una probabilidad de `r round(sum(DF$Costo == 0, na.rm = TRUE)/sum(!is.na(DF$Costo)),2)` que es considerable.
-
 Si eliminamos los ceros de nuestros datos eso nos deja con una distribucion que se ve asi:
 ```{r}
 Costo_No_ceros = DF$Costo[DF$Costo != 0 & DF$Costo < 400 & !is.na(DF$Costo)]
@@ -221,14 +70,7 @@ abline(v=c(50,200),
 text(x=c(0,110,215),y=c(20),c("Indie","AA", "AAA"))
 ```
 
-
-"A ojo" vemos tres grupos de observaciones, unas en el rango de 0 hasta 100, otras de 100 hasta 200 y un ultimo grupo entre 200 y 300. Esto tiene sentido si pensamos que los juegos "indie" son considerablemente mas baratos, que los juegos AA estan alrededor de los \$40 (S\. ~160) y que los titulos AAA se encuentran a precios de ~ \$70 (~S.\ 280). Por lo tanto nuestra muestra en realidad es un conjunto que resulta de la union de observaciones en tres variables aleatorias. La variable categorica que los separa no fue recogida en el proceso de recoleccion de datos y esfuerzos para reconstruirla a partir de las que tenemos (en particular las referentes a los generos que juega) han sido infructuosos.
-
 $$ \mathbb{C}_{total} = \mathbb{C_i} \cup \mathbb{C}_{AA} \cup \mathbb{C}_{AAA} $$
-
-<!-- Dada la multiplicidad de grupos superpuestos en nuestros datos, resultaria muy dificil modelar los datos a partir de lo que hemos recolectado. Sin embargo, sabemos que nuestras observaciones provienen de una "muestra" de precios de videojuegos. Si asumimos que todos los videojuegos dentro de cada categoria tienen una probabilidad semejante de ser comprados, entonces un buen modelo para los precios de videojuegos en general podria servir para nuestras observaciones. Entendemos que esto podria perder informacion de los sesgos especificos de UTEC. -->
-
-Para poder trabajar con estas observaciones vamos a hacer los cortes sugeridos en la grafica y trataremos de modelar cada variable por separado. Sabemos que no podemos garantizar que las obsevaciones realmente pertenezcan a cada grupo, pero no tenemos otra forma trabajarlas.
 
 ```{r}
 Costos_Indie = Costo_No_ceros[Costo_No_ceros <= 50]
@@ -334,16 +176,125 @@ ggplot(aes(x = factor(x), y = prob, fill = Failures)) +
 
 De la gráfica obtenemos que lo más probable es que se presenten 5 intentos fallidos con un porcentaje de 10,8%, es un número de intentos fallidos mediano ya que un 42% de alumnos les gusta pocos géneros de juego.
 
+# Creditos
+
+```{r}
+knitr::opts_chunk$set(echo = FALSE)
+library(stats4)
+library(MASS)
+library(survival)
+library(distrMod)
+```
+
+```{r}
+library(distrMod)
+vector = DF$Creditos[!DF$Creditos ==0]
+creditos = na.omit(vector)
+pois.f<- fitdist(c(creditos), "pois")# Poisson
+summary(pois.f)
+credito_maximo = max(DF$Creditos,na.rm=TRUE)
+x1 <- 1:credito_maximo
+lambda_poisson <- 18.61692
+plot(dpois(x1, lambda_poisson), type = "h", lwd = 2,
+     main = "Probabilidad Poisson",
+     ylab = "P(X = x)", xlab = "Creditos Academicos")
+```
+
+```{r}
+hist(creditos,prob=TRUE,main="Histograma de variable Creditos",ylab="Densidad",xlab="Creditos")
+lines(density(creditos), col = 4, lwd = 2)
+
+#Probabilidad de que una persona lleve mas de 16 creditos academicos 
+cpp = ppois(16, lambda = lambda_poisson, lower.tail = FALSE)
+round(cpp,2)
+
+```
+Obtenemos como resultado que la probabilidad de que un estudiante lleve más de 16 creditos academicos es del 68%
+
+```{r}
+vector3 = DF$Gasto[!DF$Gasto ==0]
+maximo_gasto = max(DF$Gasto)
+gastar = na.omit(vector3)
+exp.f<- fitdist(c(gastar), "exp")# Exponencial
+summary(exp.f)
+lambda_expo <- 0.003150127
+xx <- 1:maximo_gasto
+```
+
+```{r}
+plot(dexp(xx, lambda_expo), type = "h", lwd = 1,
+     main = "Probabilidad exponencial",
+     ylab = "P(X = x)", xlab = "Dinero Gastado")
+
+```
+
+```{r}
+hist(gastar,prob=TRUE,main="Histograma de variable Gasto",ylab="Densidad",xlab="Dinero Gastado")
+curve(dexp(x, rate = 0.003150127), col = 2, lty = 2, lwd = 2, add = TRUE)
+```
+
+```{r}
+#Probabilidad de que una persona gaste igual o menos que 500 soles
+messi <- pexp(500,rate = lambda_expo,lower.tail = TRUE)
+round(messi,2)
+
+```
+Obtenemos como resultado que la probabilidad de que un estudiante gaste igual o menos que 500 soles es del 79%
+
+# Promedio
+```{r}
+hist(DF$Promedio)
+```
+
+Para analizar el comportamiento de los promedios declarados por los alumnos entrevistados se ha elaborado el histograma de probabilidad de esta variable, que ha permitido validar no solo el gran porcentaje de notas aprobatorias de estos alumnos, sino que las mismas se concentran en su mayoria en promedio 14  
+
+```{r}
+hist(DF$Promedio,probability = 1, main = "Probabilidad del promedio", ylab = "Probabilidad",breaks = 20)
+```
+
+Para poder obtener ver los valores explícita mente de las probabilidades se evidencia en la siguiente tabla.
+
+```{r}
+probPromedio <- prop.table(table(DF$Promedio))
+probPromedio <- data.frame(probPromedio)
+names(probPromedio)[names(probPromedio)=='Freq'] <- 'Probabilidad'
+probPromedio
+```
 
 
-# Bibliografía
-Mendenhall, W., Beaver, R., & Beaver, B. (2014). Introduccion a la Probabilidad y Estadistica (14a ed.). Cengage Learning Editores S.A. de C.V.
+Se calcula la media:
+```{r}
+mu_Pro<-mean(DF$Promedio,na.rm=T)
+mu_Pro
+```
 
-Peng, R. D. (2014, febrero 25). R programming for data science. Leanpub. https://leanpub.com/rprogramming
+La media es: 14.3997
 
-Peng, R. D. (2015, abril 27). Exploratory data analysis with R. Leanpub. https://leanpub.com/exdata
+Calculamos la desviación estándar:
+```{r}
+sd_Pro<-sd(DF$Promedio,na.rm=T)
+sd_Pro
+```
 
-Ross, S. M. (2021). Introduction to probability and statistics for engineers and scientists (6a ed.). Academic Press.
+El valor de la desviación estándar es: 2.76536
+Con los datos obtenidos se va graficar la función normal en el histograma
+
+```{r}
+hist(DF$Promedio,probability = 1,main = "Histograma del Promedio",xlab = "Promedio", breaks = 20)
+curve(dnorm(x,mu_Pro,sd_Pro),lwd=2,add=T)
+```
+
+En la gráfica se puede apreciar que las notas se encuentran en el rango de 9 a 20.
+
+En este caso nos planteamos la siguiente pregunta ¿Cual es la probabilidad de que los estudiantes tengan un promedio aprobatorio (10.5)?
+La función probabilidad sería P(10.5<=X<=20) el cálculo seria P(X<20) - P(X<10.5)
+
+```{r}
+pnorm(20,mu_Pro,sd_Pro)-pnorm(10.5,mu_Pro,sd_Pro)
+```
+
+La probabilidad de que los alumnos encuestados tengan un promedio aprobatorio jugando videojuegos es de 0.8993336
+
 
 
 
