@@ -1070,6 +1070,17 @@ p -> probabilidad de que la persona seleccionada le guste 3 a menos géneros de 
 Ejemplo: La probabilidad de que 5 alumnos (cantidad de personas en un grupo de trabajo por lo general en los cursos) en un aula le guste 3 a menos géneros de juegos.
 Tomamos en cuenta este análisis saber que probable sería tener un grupo en un curso y saber a todos los integrantes del grupo si les gusta por lo general la misma cantidad de géneros de juegos, usamos una distribución negativa binomial.
 
+## Generos
+```{r}
+DF$Cuantos_Generos = DF$Arcade + DF$Aventura + DF$Deportes_y_carreras + DF$Estrategia + DF$Casual + DF$RPG + DF$MOBA + DF$Shooter + DF$Simulacion + DF$Peleas + DF$Plataformas + DF$Sandbox
+hist(DF$Cuantos_Generos,
+     main="Histograma de cuantos generos prefieren",
+     ylab = "Densidad",
+     xlab = "Número de generos que gustan",
+     prob = T
+     )
+```
+
 ```{r}
 r <- 5
 p <- 0.42
@@ -1093,8 +1104,10 @@ ggplot(aes(x = factor(x), y = prob, fill = Failures)) +
 ``` 
 De la gráfica obtenemos que lo más probable es que se presenten 5 intentos fallidos con un porcentaje de 10,8%, es un número de intentos fallidos mediano ya que un 42% de alumnos les gusta pocos géneros de juego.
 
-```{r}
 
+## Creditos
+
+```{r}
 library(stats4)
 library(MASS)
 library(survival)
@@ -1155,8 +1168,3 @@ round(messi,2)
 
 ```
 Obtenemos como resultado que la probabilidad de que un estudiante gaste igual o menos que 500 soles es del 79%
-
-
-
-Conclusiones:
-
