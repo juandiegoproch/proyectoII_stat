@@ -51,6 +51,8 @@ hist(DF$Costo,
      prob = T
      )
 ```
+
+# 
 Si eliminamos los ceros de nuestros datos eso nos deja con una distribucion que se ve asi:
 ```{r}
 Costo_No_ceros = DF$Costo[DF$Costo != 0 & DF$Costo < 400 & !is.na(DF$Costo)]
@@ -70,6 +72,7 @@ abline(v=c(50,200),
 text(x=c(0,110,215),y=c(20),c("Indie","AA", "AAA"))
 ```
 
+# 
 $$ \mathbb{C}_{total} = \mathbb{C_i} \cup \mathbb{C}_{AA} \cup \mathbb{C}_{AAA} $$
 
 ```{r}
@@ -99,6 +102,7 @@ hist(Costos_AAA,
 ```
 Los datos que corresponden a los videojuegos Indie no se comportan de forma normal dado que al normalizarlos no tienen las proporciones adecuadas, ni de forma poisson por la relacion que hay entre la media y la desviacion estandar ($sd(\mathbb{X} ) \simeq media(\mathbb{X})$ ). Tampoco son exponenciales dado que la forma no es la apropiada y la media y desviacion estandar no cuadran. Sin embargo, dado que el rango es desde `r min(Costos_Indie)` hasta `r max(Costos_Indie)` la media esperada para una Uniforme seria de `r round((max(Costos_Indie)+min(Costos_Indie))/2,2)` y la desviacion estandar esperada seria de `r round(sqrt(((max(Costos_Indie)-min(Costos_Indie))^2)/12),2)`. Ambos descriptores se parecen a los observados (sd = `r round(sd(Costos_Indie),2)`, media = `r round(mean(Costos_Indie),2)`) asi que la variable que mas se asemeja dentro de las estudiadas es la Uniforme, a pesar del sesgo a la izquierda que presenta. Lo mismo se cumple para los costos de AA y AAA.Esto significa que nuestro modelo quedaria asi:
 
+# 
 Existe T tal que
 ```{r}
 min(Costos_AA)
@@ -154,6 +158,8 @@ p -> probabilidad de que la persona seleccionada le guste 3 a menos géneros de 
 Ejemplo: La probabilidad de que 5 alumnos (cantidad de personas en un grupo de trabajo por lo general en los cursos) en un aula le guste 3 a menos géneros de juegos.
 Tomamos en cuenta este análisis saber que probable sería tener un grupo en un curso y saber a todos los integrantes del grupo si les gusta por lo general la misma cantidad de géneros de juegos, usamos una distribución negativa binomial.
 
+# 
+
 ```{r}
 r <- 5
 p <- 0.42
@@ -200,6 +206,7 @@ plot(dpois(x1, lambda_poisson), type = "h", lwd = 2,
      ylab = "P(X = x)", xlab = "Creditos Academicos")
 ```
 
+# 
 ```{r}
 hist(creditos,prob=TRUE,main="Histograma de variable Creditos",ylab="Densidad",xlab="Creditos")
 lines(density(creditos), col = 4, lwd = 2)
@@ -220,7 +227,7 @@ summary(exp.f)
 lambda_expo <- 0.003150127
 xx <- 1:maximo_gasto
 ```
-
+# 
 ```{r}
 plot(dexp(xx, lambda_expo), type = "h", lwd = 1,
      main = "Probabilidad exponencial",
@@ -228,6 +235,7 @@ plot(dexp(xx, lambda_expo), type = "h", lwd = 1,
 
 ```
 
+# 
 ```{r}
 hist(gastar,prob=TRUE,main="Histograma de variable Gasto",ylab="Densidad",xlab="Dinero Gastado")
 curve(dexp(x, rate = 0.003150127), col = 2, lty = 2, lwd = 2, add = TRUE)
@@ -247,20 +255,10 @@ hist(DF$Promedio)
 ```
 
 Para analizar el comportamiento de los promedios declarados por los alumnos entrevistados se ha elaborado el histograma de probabilidad de esta variable, que ha permitido validar no solo el gran porcentaje de notas aprobatorias de estos alumnos, sino que las mismas se concentran en su mayoria en promedio 14  
-
+# 
 ```{r}
 hist(DF$Promedio,probability = 1, main = "Probabilidad del promedio", ylab = "Probabilidad",breaks = 20)
 ```
-
-Para poder obtener ver los valores explícita mente de las probabilidades se evidencia en la siguiente tabla.
-
-```{r}
-probPromedio <- prop.table(table(DF$Promedio))
-probPromedio <- data.frame(probPromedio)
-names(probPromedio)[names(probPromedio)=='Freq'] <- 'Probabilidad'
-probPromedio
-```
-
 
 Se calcula la media:
 ```{r}
@@ -275,7 +273,7 @@ Calculamos la desviación estándar:
 sd_Pro<-sd(DF$Promedio,na.rm=T)
 sd_Pro
 ```
-
+# 
 El valor de la desviación estándar es: 2.76536
 Con los datos obtenidos se va graficar la función normal en el histograma
 
@@ -295,7 +293,7 @@ pnorm(20,mu_Pro,sd_Pro)-pnorm(10.5,mu_Pro,sd_Pro)
 
 La probabilidad de que los alumnos encuestados tengan un promedio aprobatorio jugando videojuegos es de 0.8993336
 
-
+# Gracias
 
 
 
