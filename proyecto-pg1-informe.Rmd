@@ -99,87 +99,50 @@ Obtuvo una muestra cuyo tamaño es de `r nrow(DF)` observaciones.
 
 ## Descripción de las variables de estudio
 
-+ `Codigo`: Tipo categórica nominal, está conformada por 9 dígitos. 
 
-+ `Sexo`: Tipo categórica nominal, admite las siguientes respuestas: Masculino, Femenino o Prefiero no especificar.
+| Variable | Tipo | Descripción | 
+|-------------------|-------------|---------------|
+| Código | Categórica nominal | Identificador de alumno en UTEC |
+| Sexo | Categórica nominal  | Orientación sexual |
+| Edad | Numérica discreta | Edad actual del encuestado |
+| Carrera | Categórica nominal  | Carrera cursada |
+| Ciclo | Numérica discreta | Ciclo académico |
+| Créditos | Numérica discreta | Cantidad de créditos |
+| Vive solo | Categórica nominal  | Afirmación o negación si vive solo |
+| Ha jugado | Categórica nominal  | Afirmación o negación si ha jugado videojuegos |
+| Gasto | Numérica continua  | Gasto en videojuegos el ultimo año |
+| Costo | Numérica continua  | Precio del ultimo juego adquirido |
+| Frecuencia |  Numérica continua | Horas de juego a la semana |
+| Estudio | Numérica continua | Horas de estudio a la semana |
+| Amigos | Categórica nominal | Afirmación o negación si juega con amigos |
+| Frecuencia amigos | Numérica continua | Horas de juego con amigos |
+| Promedio | Numérica continua | Promedio alcanzado en el ciclo pasado o promedio de 5to de secundaria si el alumno de primer ciclo |
+| Afecta | Categórica nominal  | Afirmación o negación si cree que jugar afecta a sus estudios |
+| Favorito | Categórica nominal | Videojuego favorito |
+| Horas de juego | Numérica continua  | Horas de juego |
+| Jugar es divertido |  Categórica ordinal | Calificación de del 1 - 7 si es divertido jugar |
+| Continua | Categórica ordinal | Calificación de del 1 - 7 si continua jugando después de cada partida |
+| Bueno | Categórica ordinal | Calificación del 1 - 7 si es bueno jugando |
 
-+ `Edad`: Tipo numérica discreta positiva.
+**Preferencias**
+| Shooter | Categórica ordinal  | Gusto por el genero si / no |
+| Deporte y carreras | Categórica ordinal  | Gusto por el genero si / no |
+| Plataformas | Categórica ordinal  | Gusto por el genero si / no |
+| Peleas | Categórica ordinal  | Gusto por el genero si / no |
+| Estrategia | Categórica ordinal  | Gusto por el genero si / no |
+| Simulación | Categórica ordinal  | Gusto por el genero si / no |
+| Aventura | Categórica ordinal  | Gusto por el genero si / no |
+| RPG | Categórica ordinal  | Gusto por el genero si / no |
+| Sandbox | Categórica ordinal  | Gusto por el genero si / no |
+| Casual | Categórica ordinal  | Gusto por el genero si / no |
+| Arcade | Categórica ordinal  | Gusto por el genero si / no |
+| MOBA | Categórica ordinal  | Gusto por el genero si / no |
 
-+ `Carrera`: Tipo categórica nominal, admite carreras ofrecidas en la UTEC.
-
-+ `Ciclo`: Tipo numérica discreta, su restricción es que sea mayor o igual 1.
-
-+ `Creditos`: Tipo numérica discreta, su restricción es que sea mínimo 16 y máximo 30.
-
-+ `Vive_solo`: Tipo categórica nominal, puede ser Sí o No.
-
-+ `Ha_jugado`: Tipo categórica nominal, puede ser Sí o No. Corresponde a si el alumno ha jugado algún videojuego.
-
-+ `Gasto`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Cuanto gastó el alumno en videojuegos en soles este año.
-
-+ `Costo`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Costo del último juego que el alumno compro.
-
-+ `Frecuencia`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Cuál es la cantidad de horas de juego del alumno en la semana.
-
-+ `Estudio`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Cuánto tiempo dedica el alumno a estudiar en la semana.
-
-+ `Amigos`: Tipo categórica nominal, puede ser Sí o No. Refiere a si el alumno juega con amigos.
-
-+ `Frecuencia_amigos`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Refiere a la cantidad de horas que el alumno dedica a jugar con amigos en la semana.
-
-+ `Promedio`: Tipo numérica continua, el valor debe ser mínimo 0 y máximo 20. Promedio del ciclo pasado o 5to de secundaria del alumno en caso sea primer ciclo.
-
-+ `Afecta`: Tipo categórica nominal, puede ser Sí, No o Tal vez. Refiere a si el alumno piensa que el jugar videojuegos afecta sus estudios.
-
-+ `Favorito`: Tipo categórica nominal, respuesta abierta. Videojuego favorito del alumno.
-
-+ `Horas_juego`: Tipo numérica continua, el valor debe ser mayor o igual a 0. Horas de juego del alumno.
-
-+ `Jugar_es_divertido`: Tipo categórica ordinal, admite valores enteros entre 1 y 7. Se refiere a si jugar es divertido para el alumno.
-
-+ `Continua`: Tipo categórica ordinal, admite valores enteros entre 1 y 7. Refiere a si al comenzar a jugar un alumno quiere seguir haciéndolo.
-
-+ `Bueno`: Tipo categórica ordinal, admite valores enteros entre 1 y 7. Refiere a si el alumno se considera bueno en videojuegos.
-
-+ Preferencias: Las variables de preferencia son categóricas ordinales y admiten Si o No, refieren a si al alumno le gusta el género.
-
-  + `Shooter`
-
-  + `Deporte_y_carreras`
-  
-  + `Plataformas`
-  
-  + `Peleas`
-  
-  + `Estrategia`
-  
-  + `Simulacion`
-  
-  + `Aventura`
-  
-  + `RPG`
-  
-  + `Sandbox`
-  
-  + `Casual`
-  
-  + `Arcade`
-  
-  + `MOBA`
-  
-
-+ Plataforma: Las variables de plataforma pueden ser 'Si' o 'No'
-
-  + `plataforma_consola`: Tipo categórica nominal. Refiere a si el alumno juega en móvil.
-
-  + `plataforma_movil`: Tipo categórica nominal. Refiere a si el alumno juega en móvil.
-  
-  + `plataforma_pc`: Tipo categórica nominal. Refiere a si el alumno juega en pc.
-  
-  + `plataforma_tablet`: Tipo categórica nominal. Refiere a si el alumno juega en tablet.
-
-
-
+**Plataformas**
+| Plataforma consola | Categórica nominal  | Juega en consola |
+| Plataforma móvil | Categórica nominal  | Juega en móvil |
+| Plataforma PC | Categórica nominal  | PC |
+| Plataforma tablet | Categórica nominal  | Tablet |
 
 Encontramos 37 variables
 
