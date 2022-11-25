@@ -827,17 +827,17 @@ barplot(preferidos
 
 Claramente los alumnos de la UTEC juegan más en plataformas móviles y en PC.
 
-# TESTEO Y DESCRIPTORES
+<!-- # TESTEO Y DESCRIPTORES -->
 
-Incidencia de NAs por variable:
-```{r}
-colSums(is.na(DF))[colSums(is.na(DF)) > 0]
-```
+<!-- Incidencia de NAs por variable: -->
+<!-- ```{r} -->
+<!-- colSums(is.na(DF))[colSums(is.na(DF)) > 0] -->
+<!-- ``` -->
 
-Incidencia porcentual de NAs por variable
-```{r}
-round(colSums(is.na(DF))[colSums(is.na(DF)) > 0]/nrow(DF)*100,2)
-```
+<!-- Incidencia porcentual de NAs por variable -->
+<!-- ```{r} -->
+<!-- round(colSums(is.na(DF))[colSums(is.na(DF)) > 0]/nrow(DF)*100,2) -->
+<!-- ``` -->
 
 <!-- # Histogramas de todas las variables numericas limpias: -->
 
@@ -940,18 +940,9 @@ Hemos decidido tomar como variables de interes las siguientes:
 
 -   Gasto,
 
--   Costo, .
+-   Costo, 
 
--   Frecuencia
-
-```{r}
-DF$Cuantos_Generos = DF$Arcade + DF$Aventura + DF$Deportes_y_carreras + DF$Estrategia + DF$Casual + DF$RPG + DF$MOBA + DF$Shooter + DF$Simulacion + DF$Peleas + DF$Plataformas + DF$Sandbox
-
-hist(DF$Cuantos_Generos,
-     )
-mean(DF$Cuantos_Generos)
-sd(DF$Cuantos_Generos)
-```
+-   Generos
 
 
 ## Costo:
